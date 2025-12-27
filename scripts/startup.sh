@@ -1,8 +1,43 @@
 #!/bin/ash
 # Byte-H Premium Startup Script
 
-# 1. Branding
+# 0. Helper: Send Discord Webhook
+send_discord_alert() {
+    local STATUS=$1
+    local COLOR=$2
+    if [ ! -z "${DISCORD_WEBHOOK}" ]; then
+        curl -H "Content-Type: application/json" -X POST -d '{
+          "embeds": [{
+            "title": "Server Status: '"$STATUS"'",
+            "description": "**Byte-H Performance Engine**\nYour server status has changed.",
+            "color": '"$COLOR"',
+            "footer": { "text": "Byte-H AI Lag Guard Active" },
+            "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
+          }]
+        }' "${DISCORD_WEBHOOK}" > /dev/null 2>&1
+    fi
+}
+
+# 1. Branding & Start Alert
 echo -e "\n\033[36m██████╗ ██╗   ██╗████████╗███████╗      ██╗  ██╗\n\033[36m██╔══██╗╚██╗ ██╔╝╚══██╔══╝██╔════╝      ██║  ██║\n\033[36m██████╔╝ ╚████╔╝    ██║   █████╗        ███████║\n\033[36m██╔══██╗  ╚██╔╝     ██║   ██╔══╝        ██╔══██║\n\033[36m██████╔╝   ██║      ██║   ███████╗      ██║  ██║\n\033[36m╚═════╝    ╚═╝      ╚═╝   ╚══════╝      ╚═╝  ╚═╝\n\033[32mByte-H Performance Engine\nAuto Optimization: ENABLED\nAI Lag Guard: ACTIVE\033[0m\n"
+
+# Send "Starting" Alert (Yellow: 16776960)
+send_discord_alert "STARTING" 16776960
+
+# ------------------------------------------------------------------------------------------------
+# PREMIUM FEATURE: Auto-Update
+# ------------------------------------------------------------------------------------------------
+if [ "${AUTO_UPDATE}" == "1" ] || [ "${AUTO_UPDATE}" == "true" ]; then
+    echo -e "\033[33m[Byte-H] Auto-Update is ENABLED. Checking for updates...\033[0m"
+    if [ -z "${GITHUB_USER}" ] || [ -z "${GITHUB_REPO}" ]; then
+         echo -e "\033[31m[Byte-H] Cannot auto-update: GitHub variables missing.\033[0m"
+    else
+         # We pull the install script from the repo to ensure we have the latest install logic
+         curl -s -f -o /tmp/install.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/install.sh
+         chmod +x /tmp/install.sh
+         /tmp/install.sh
+    fi
+fi
 
 # 2. Check for Server JAR
 if [ ! -f ${SERVER_JARFILE} ]; then
@@ -53,3 +88,7 @@ exec java -Xms${MEM_INIT}M -Xmx${MEM_HEAP}M \
     -Dusing.aikars.flags=https://mcflags.emc.gs \
     -Daikars.new.flags=true \
     -jar ${SERVER_JARFILE}
+
+# Send "Stopped" Alert (Red: 15158332)
+echo -e "\033[31m[Byte-H] Server stopped.\033[0m"
+send_discord_alert "OFFLINE" 15158332

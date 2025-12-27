@@ -46,4 +46,23 @@ else
     exit 1
 fi
 
+
+# ------------------------------------------------------------------------------------------------
+# PREMIUM FEATURE: Geyser & Floodgate Auto-Installer
+# ------------------------------------------------------------------------------------------------
+if [ "${INSTALL_GEYSER}" == "1" ] || [ "${INSTALL_GEYSER}" == "true" ]; then
+    echo -e "\033[36m[Byte-H] Bedrock Support Enabled! Installing Geyser & Floodgate...\033[0m"
+    mkdir -p /mnt/server/plugins
+    
+    # Geyser
+    echo "Downloading Geyser-Spigot..."
+    curl -o /mnt/server/plugins/Geyser-Spigot.jar "https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot"
+    
+    # Floodgate
+    echo "Downloading Floodgate-Spigot..."
+    curl -o /mnt/server/plugins/Floodgate-Spigot.jar "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot"
+    
+    echo -e "\033[32m[Byte-H] Geyser & Floodgate installed successfully!\033[0m"
+fi
+
 echo -e "\033[32m[Byte-H] Installation Complete!\033[0m"

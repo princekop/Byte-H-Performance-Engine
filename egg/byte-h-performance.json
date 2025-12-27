@@ -82,6 +82,33 @@
             "user_viewable": true,
             "user_editable": true,
             "rules": "required|string|max:40"
+        },
+        {
+            "name": "Discord Webhook",
+            "description": "Optional: Webhook URL to send server status updates to.",
+            "env_variable": "DISCORD_WEBHOOK",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string|url"
+        },
+        {
+            "name": "Auto Update Server",
+            "description": "If enabled, the server JAR will be updated on every restart.",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean"
+        },
+        {
+            "name": "Install Geyser (Bedrock)",
+            "description": "If enabled, Geyser and Floodgate will be installed automatically.",
+            "env_variable": "INSTALL_GEYSER",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean"
         }
     ]
 }
