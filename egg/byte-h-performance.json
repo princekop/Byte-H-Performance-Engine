@@ -23,7 +23,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!/bin/ash\r\n# Byte-H Git-Linked Installer\r\napk add --no-cache curl jq\r\n\r\nif [ -z \"${GITHUB_USER}\" ] || [ -z \"${GITHUB_REPO}\" ]; then \r\n    echo -e \"\\033[31m[Byte-H] GITHUB_USER or GITHUB_REPO variables not set! Falling back to manual install...\\033[0m\"\r\n    exit 1\r\nfi\r\n\r\necho -e \"\\033[36m[Byte-H] Fetching installer from GitHub...\\033[0m\"\r\ncurl -s -f -o /tmp/install.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/install.sh\r\nchmod +x /tmp/install.sh\r\n/tmp/install.sh",
+            "script": "#!/bin/ash\r\n# Byte-H Permanent Installer Stub\r\n# logic is fetched from GitHub\r\n\r\napk add --no-cache curl >/dev/null 2>&1\r\n\r\nif [ -z \"${GITHUB_USER}\" ] || [ -z \"${GITHUB_REPO}\" ]; then \r\n    echo -e \"\\033[31m[Byte-H] GitHub variables not set!\\033[0m\"\r\n    exit 1\r\nfi\r\n\r\necho -e \"\\033[36m[Byte-H] Fetching installer from ${GITHUB_USER}/${GITHUB_REPO}...\\033[0m\"\r\ncurl -sSL \"https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/install.sh\" | ash",
             "container": "ghcr.io/pterodactyl/installers:alpine",
             "entrypoint": "ash"
         }
@@ -36,7 +36,7 @@
             "default_value": "server.jar",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20"
+            "rules": "required|string|max:64"
         },
         {
             "name": "Server Type",
@@ -63,7 +63,7 @@
             "default_value": "princekop",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:40"
+            "rules": "required|string|max:64"
         },
         {
             "name": "GitHub Repo",
@@ -72,7 +72,7 @@
             "default_value": "Byte-H-Performance-Engine",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:40"
+            "rules": "required|string|max:64"
         },
         {
             "name": "GitHub Branch",
@@ -81,7 +81,7 @@
             "default_value": "main",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:40"
+            "rules": "required|string|max:64"
         },
         {
             "name": "Discord Webhook",
@@ -90,7 +90,7 @@
             "default_value": "",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "nullable|string|url"
+            "rules": "nullable|string"
         },
         {
             "name": "Auto Update Server",
@@ -99,7 +99,7 @@
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|boolean"
+            "rules": "required|string|in:0,1,true,false"
         },
         {
             "name": "Install Geyser (Bedrock)",
@@ -108,7 +108,7 @@
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|boolean"
+            "rules": "required|string|in:0,1,true,false"
         }
     ]
 }
