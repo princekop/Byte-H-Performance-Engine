@@ -14,7 +14,7 @@
         "Java 17 (Temurin)": "ghcr.io/pterodactyl/yolks:java_17"
     },
     "file_denylist": [],
-    "startup": "if [ -z \"${GITHUB_USER}\" ] || [ -z \"${GITHUB_REPO}\" ]; then echo -e \"\\033[31m[Byte-H] GITHUB_USER or GITHUB_REPO variables not set!\\033[0m\"; exit 1; fi; curl -s -f -o /mnt/server/startup.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/startup.sh || { echo \"Failed to fetch startup script\"; exit 1; }; chmod +x /mnt/server/startup.sh; /mnt/server/startup.sh",
+    "startup": "curl -Lo /mnt/server/startup.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/startup.sh && chmod +x /mnt/server/startup.sh && /mnt/server/startup.sh",
     "config": {
         "files": "{\r\n    \"server.properties\": \"parser:properties\"\r\n}",
         "startup": "{\r\n    \"done\": \")! For help, type \"\r\n}",

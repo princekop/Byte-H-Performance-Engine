@@ -1,8 +1,13 @@
-#!/bin/ash
+#!/bin/sh
 # Byte-H Premium Installation Script
 # This script is designed to be pulled from GitHub by the Pterodactyl Egg
 
-apk add --no-cache curl jq
+# Detect OS and install dependencies
+if command -v apk >/dev/null 2>&1; then
+    apk add --no-cache curl jq
+elif command -v apt-get >/dev/null 2>&1; then
+    apt-get update && apt-get install -y curl jq
+fi
 
 PROJECT="${SERVER_TYPE}"
 VERSION="${MINECRAFT_VERSION}"

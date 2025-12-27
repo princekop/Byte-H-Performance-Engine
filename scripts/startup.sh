@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/bash
 # Byte-H Premium Startup Script
 
 # 0. Helper: Send Discord Webhook
