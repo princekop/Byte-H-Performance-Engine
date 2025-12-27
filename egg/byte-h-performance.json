@@ -10,8 +10,8 @@
     "description": "Premium High-Performance Minecraft Egg linked to GitHub for easy updates. Features automatic G1GC tuning, dynamic RAM allocation, and AI Lag Guard branding.",
     "features": null,
     "docker_images": {
-        "Java 21 (Temurin)": "ghcr.io/pterodactyl/yolks:java_21",
-        "Java 17 (Temurin)": "ghcr.io/pterodactyl/yolks:java_17"
+        "ghcr.io/pterodactyl/yolks:java_21": "Java 21 (Temurin)",
+        "ghcr.io/pterodactyl/yolks:java_17": "Java 17 (Temurin)"
     },
     "file_denylist": [],
     "startup": "curl -Lo /mnt/server/startup.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/startup.sh && chmod +x /mnt/server/startup.sh && /mnt/server/startup.sh",
