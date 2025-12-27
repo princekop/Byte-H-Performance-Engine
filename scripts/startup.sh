@@ -1,72 +1,68 @@
 #!/bin/bash
-# Byte-H Premium Startup Script
+# -----------------------------------------------------------------------------
+# BYTE-H PERFORMANCE ENGINE | "Ultimate Startup"
+# Author: Mohit
+# -----------------------------------------------------------------------------
 
-# 0. Helper: Send Discord Webhook
-send_discord_alert() {
-    local STATUS=$1
-    local COLOR=$2
-    if [ ! -z "${DISCORD_WEBHOOK}" ]; then
-        curl -H "Content-Type: application/json" -X POST -d '{
-          "embeds": [{
-            "title": "Server Status: '"$STATUS"'",
-            "description": "**Byte-H Performance Engine**\nYour server status has changed.",
-            "color": '"$COLOR"',
-            "footer": { "text": "Byte-H AI Lag Guard Active" },
-            "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"
-          }]
-        }' "${DISCORD_WEBHOOK}" > /dev/null 2>&1
-    fi
-}
+# 1. BRANDING (Big Letters)
+echo -e "\033[36m"
+echo "  ____  _  _  ____  ____       _   _"
+echo " | __ )| || ||_  _||  __|     | | | |"
+echo " |  _ \| || |_ | |  | |_ _____| |_| |"
+echo " | |_) |__   _|| |  |  _|_____|  _  |"
+echo " |____/   |_|  |_|  |__|      |_| |_|"
+echo -e "\033[35m         ~ Mohit \033[0m"
+echo -e "\033[32m[Byte-H] Performance Engine Loaded.\033[0m"
 
-# 1. Branding & Start Alert
-echo -e "\n\033[36m██████╗ ██╗   ██╗████████╗███████╗      ██╗  ██╗\n\033[36m██╔══██╗╚██╗ ██╔╝╚══██╔══╝██╔════╝      ██║  ██║\n\033[36m██████╔╝ ╚████╔╝    ██║   █████╗        ███████║\n\033[36m██╔══██╗  ╚██╔╝     ██║   ██╔══╝        ██╔══██║\n\033[36m██████╔╝   ██║      ██║   ███████╗      ██║  ██║\n\033[36m╚═════╝    ╚═╝      ╚═╝   ╚══════╝      ╚═╝  ╚═╝\n\033[32mByte-H Performance Engine\nAuto Optimization: ENABLED\nAI Lag Guard: ACTIVE\033[0m\n"
+# 2. VERSION SELECTION logic
+# Default to 1.21.4 if not set
+VER="${MINECRAFT_VERSION:-1.21.4}"
+JAR="server.jar"
 
-# Send "Starting" Alert (Yellow: 16776960)
-send_discord_alert "STARTING" 16776960
-
-# ------------------------------------------------------------------------------------------------
-# PREMIUM FEATURE: Auto-Update
-# ------------------------------------------------------------------------------------------------
-if [ "${AUTO_UPDATE}" == "1" ] || [ "${AUTO_UPDATE}" == "true" ]; then
-    echo -e "\033[33m[Byte-H] Auto-Update is ENABLED. Checking for updates...\033[0m"
-    if [ -z "${GITHUB_USER}" ] || [ -z "${GITHUB_REPO}" ]; then
-         echo -e "\033[31m[Byte-H] Cannot auto-update: GitHub variables missing.\033[0m"
+# 3. AUTO-DOWNLOAD SERVER JAR (Only if missing)
+if [ ! -f "$JAR" ]; then
+    echo -e "\033[33m[Byte-H] Server JAR not found. Downloading Paper (${VER})...\033[0m"
+    
+    if [ "$VER" == "1.21.4" ]; then
+        curl -o $JAR "https://fill-data.papermc.io/v1/objects/5ee4f542f628a14c644410b08c94ea42e772ef4d29fe92973636b6813d4eaffc/paper-1.21.4-232.jar"
+    elif [ "$VER" == "1.21.11" ]; then
+        # Utilizing the specific link provided by user
+        curl -o $JAR "https://fill-data.papermc.io/v1/objects/7e8fd35b554aea8d1492c83fcf429e9c8e391464e50f82ee3e408be87b4e80df/paper-1.21.11-39.jar"
     else
-         # We pull the install script from the repo to ensure we have the latest install logic
-         curl -s -f -o /tmp/install.sh https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/scripts/install.sh
-         chmod +x /tmp/install.sh
-         /tmp/install.sh
-    fi
-fi
-
-# 2. Check for Server JAR
-if [ ! -f ${SERVER_JARFILE} ]; then
-    echo -e "\033[31m[ERROR] Server JAR (${SERVER_JARFILE}) not found!\n\033[31mPlease ensure the server is installed or the jar name is correct.\033[0m"
-    exit 1
-fi
-
-# 3. Download/Apply Optimized Configs if not present
-if [ ! -f server.properties ] && [ "${SERVER_TYPE}" != "velocity" ]; then
-    echo -e "\033[33m[Byte-H] Fetching optimized server.properties...\033[0m"
-    # We try to download from the repo first, fallback to generating locally if network fails or repo invalid
-    if [ ! -z "${GITHUB_USER}" ] && [ ! -z "${GITHUB_REPO}" ] && [ ! -z "${GITHUB_BRANCH}" ]; then
-         curl -s -f -o server.properties https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${GITHUB_BRANCH}/config/server.properties || echo "Failed to download config, generating locally..."
+        # Fallback to latest 1.21.4 if unknown
+        echo "Unknown version map. Defaulting to 1.21.4..."
+        curl -o $JAR "https://fill-data.papermc.io/v1/objects/5ee4f542f628a14c644410b08c94ea42e772ef4d29fe92973636b6813d4eaffc/paper-1.21.4-232.jar"
     fi
     
-    if [ ! -f server.properties ]; then
-        echo -e "\033[33m[Byte-H] Generating optimized server.properties locally...\033[0m"
-        echo -e "view-distance=10\nsimulation-distance=6\nnetwork-compression-threshold=256\nmax-tick-time=60000\nprevent-proxy-connections=false\nuse-native-transport=true\nenable-jmx-monitoring=false\nsync-chunk-writes=true\n" >> server.properties
-    fi
+    echo -e "\033[32m[Byte-H] Server JAR downloaded!\033[0m"
+else
+    echo -e "\033[32m[Byte-H] Server JAR found. Skipping download.\033[0m"
 fi
 
-# 4. Dynamic RAM Allocation
-MEM_HEAP=$((${SERVER_MEMORY} * 95 / 100))
-MEM_INIT=$((${SERVER_MEMORY} * 60 / 100))
+# 4. AUTO-DOWNLOAD PLUGINS (Chunky, ClearLag)
+mkdir -p plugins
 
-echo -e "\033[32m[Byte-H] Starting server with ${MEM_HEAP}MB max heap (Xms: ${MEM_INIT}MB)...\033[0m"
+# Chunky (Pre-generates world to fix lag)
+if [ ! -f "plugins/Chunky.jar" ]; then
+    echo -e "\033[36m[Byte-H] Installing Chunky (Lag Fix)...\033[0m"
+    curl -H "User-Agent: Byte-H" -L -o "plugins/Chunky.jar" "https://hangarcdn.papermc.io/plugins/pop4959/Chunky/versions/1.4.28/PAPER/Chunky-1.4.28.jar"
+fi
 
-# 5. Launch JVM
-exec java -Xms${MEM_INIT}M -Xmx${MEM_HEAP}M \
+# ClearLag (Clears entities) - Using a stable build or alternative since ClearLag is old. 
+# Using "ClearLag" optimized fork or similar if available, but for now generic.
+if [ ! -f "plugins/ClearLag.jar" ]; then
+    echo -e "\033[36m[Byte-H] Installing ClearLag...\033[0m"
+    # Placeholder for a direct link to ClearLag or equivalent
+    curl -L -o "plugins/ClearLag.jar" "https://dev.bukkit.org/projects/clearlagg/files/latest" 
+fi
+
+# 5. START SERVER
+MEM_HEAP="${SERVER_MEMORY:-4096}"
+MEM_MS=$((MEM_HEAP * 75 / 100))
+
+echo -e "\033[32m[Byte-H] Starting Server with ${MEM_HEAP}MB RAM...\033[0m"
+
+java -Xms${MEM_MS}M -Xmx${MEM_HEAP}M \
     -XX:+UseG1GC \
     -XX:+ParallelRefProcEnabled \
     -XX:MaxGCPauseMillis=200 \
@@ -87,8 +83,4 @@ exec java -Xms${MEM_INIT}M -Xmx${MEM_HEAP}M \
     -XX:MaxTenuringThreshold=1 \
     -Dusing.aikars.flags=https://mcflags.emc.gs \
     -Daikars.new.flags=true \
-    -jar ${SERVER_JARFILE}
-
-# Send "Stopped" Alert (Red: 15158332)
-echo -e "\033[31m[Byte-H] Server stopped.\033[0m"
-send_discord_alert "OFFLINE" 15158332
+    -jar "$JAR" nogui

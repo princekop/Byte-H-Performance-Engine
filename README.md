@@ -31,5 +31,18 @@ The server will automatically pull the latest `install.sh` and `startup.sh` from
 - `scripts/`: Contains `install.sh` and `startup.sh` (logic lies here).
 - `config/`: Contains the optimized `server.properties`.
 
-## Customization
-To update the logic for all your clients, simply edit `scripts/startup.sh` locally and push to GitHub. All servers will use the new logic on their next restart!
+## Customization (The "Permanent Egg" Logic)
+This Egg is designed to be **Permanent**. You should **NOT** need to update the `byte-h-performance.json` file in Pterodactyl after the initial import, even if you want to change:
+- Startup Logic
+- Java Flags
+- Installation Steps
+- Auto-Update behavior
+- Discord Alerts
+
+**All logic is fetched from GitHub.**
+To push an update to all your servers:
+1.  Edit `scripts/startup.sh` or `scripts/install.sh` on your PC.
+2.  `git push` the changes to this repo.
+3.  **Done!** Every server using this egg will automatically pull the new logic on their next restart/install.
+
+*Only update the Egg JSON if you need to add NEW variables (like a new API key field).*
