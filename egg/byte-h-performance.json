@@ -36,7 +36,7 @@
             "default_value": "server.jar",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:64"
+            "rules": "required|string"
         },
         {
             "name": "Server Type",
@@ -45,7 +45,7 @@
             "default_value": "paper",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:paper,purpur,velocity"
+            "rules": "required|string"
         },
         {
             "name": "Minecraft Version",
@@ -54,7 +54,7 @@
             "default_value": "latest",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:20"
+            "rules": "required|string"
         },
         {
             "name": "GitHub Username",
@@ -63,7 +63,7 @@
             "default_value": "princekop",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:64"
+            "rules": "required|string"
         },
         {
             "name": "GitHub Repo",
@@ -72,7 +72,7 @@
             "default_value": "Byte-H-Performance-Engine",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:64"
+            "rules": "required|string"
         },
         {
             "name": "GitHub Branch",
@@ -81,7 +81,7 @@
             "default_value": "main",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:64"
+            "rules": "required|string"
         },
         {
             "name": "Discord Webhook",
@@ -99,7 +99,7 @@
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:0,1,true,false"
+            "rules": "required|string"
         },
         {
             "name": "Install Geyser (Bedrock)",
@@ -108,7 +108,7 @@
             "default_value": "0",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|in:0,1,true,false"
+            "rules": "required|string"
         }
     ]
 }
